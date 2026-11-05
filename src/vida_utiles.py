@@ -9,8 +9,15 @@ def crear_tablero(filas: int, columnas: int) -> list[list[bool]]:
     Devuelve:
         Una lista de listas con todos los elementos False.
     """
-    # TODO: Ejercicio 1
-    pass
+    lista_chica= []
+    lista_grande=[]
+    for i in range(filas):
+        for j in range(columnas):
+            lista_chica.append(False)
+        lista_grande.append(lista_chica)
+        lista_chica = []
+    return lista_grande
+
 
 def crear_tablero_aleatorio(filas: int, columnas: int, probabilidad_vida: float) -> list[list[bool]]:
     """
@@ -25,8 +32,13 @@ def crear_tablero_aleatorio(filas: int, columnas: int, probabilidad_vida: float)
     Devuelve:
         Una lista de listas que representa el tablero con células vivas (True) y muertas (False).
     """
-    # TODO: Ejercicio 2
-    pass
+    tablero = crear_tablero(filas, columnas)
+    for i in range(filas):
+        for j in range(columnas):
+            if random.random() < probabilidad_vida:
+                tablero[i][j] = True
+    return tablero
+
 
 def insertar_patron(tablero: list[list[bool]], patron: list[list[bool]], pos_fila: int, pos_col: int):
     """
@@ -37,8 +49,13 @@ def insertar_patron(tablero: list[list[bool]], patron: list[list[bool]], pos_fil
         pos_fila (int): La fila en la que se insertará la esquina superior izquierda del patrón.
         pos_col (int): La columna en la que se insertará la esquina superior izquierda del patrón.
     """
-    # TODO: Ejercicio 3
-    pass
+
+    for i in range(len(patron)):
+        for j in range(len(patron[0])):
+            if i + pos_fila < len(tablero) and j + pos_col < len(tablero[0]):
+                tablero[pos_fila+i][pos_col+j]=patron[i][j]
+    return tablero
+     
 
 def contar_vecinos(tablero: list[list[bool]], fila: int, col: int) -> int:
     """
@@ -51,8 +68,13 @@ def contar_vecinos(tablero: list[list[bool]], fila: int, col: int) -> int:
     Devuelve:
         El número de vecinos vivos (int).
     """
-    # TODO: Ejercicio 4
-    pass
+    res = 0
+    for inc_fila in range(-1, 2):
+        for inc_col in range(-1,2):
+            if not(inc_fila == 0 and inc_col == 0):
+                if tablero[(fila + inc_fila)%len(tablero)][(col + inc_col)%len(tablero[0])]:
+                    res += 1
+    return res
 
 def calcular_siguiente_generacion(tablero) -> list[list[bool]]:
     """
@@ -63,5 +85,14 @@ def calcular_siguiente_generacion(tablero) -> list[list[bool]]:
     Devuelve:
         Una nueva lista de listas que representa el tablero en la siguiente generación.
     """
-    # TODO: Ejercicio 5
-    pass
+    res= crear_tablero(len(tablero),len(tablero[0]))
+    for i in range(len(tablero)):
+        for j in range(len(tablero[0])):
+            vecinos = contar_vecinos(tablero, i, j)
+            if tablero[i][j] and (vecinos == 2 or vecinos == 3):
+                res[i][j] = True
+            elif not (tablero[i][j]) and vecinos == 3:
+                res[i][j] = True
+            else:
+                res[i][j] = False
+    return res
